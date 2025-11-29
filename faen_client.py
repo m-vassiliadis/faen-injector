@@ -3,12 +3,15 @@
 FAEN API Client for authentication and data retrieval
 """
 
+import json
+import time
 import requests
 from datetime import datetime, timedelta, date
 from typing import Dict, List, Optional, Any, Union
 from urllib.parse import urljoin
 
 from console_utils import print_section, print_info, print_success, print_error, print_data, print_warning
+from mrae import MRAEClient
 
 
 class FaenApiClient:
@@ -112,8 +115,6 @@ class FaenApiClient:
         # Check if this is a large date range query that needs chunking
         datetime_range = query.get('datetime', {})
         if isinstance(datetime_range, dict) and '$gte' in datetime_range and '$lt' in datetime_range:
-            from datetime import datetime, timedelta
-            
             # Extract start and end dates from query
             start_date_str = datetime_range['$gte']['$date']
             end_date_str = datetime_range['$lt']['$date']
@@ -195,9 +196,6 @@ class FaenApiClient:
         Returns:
             Combined list of consumption data records from all chunks
         """
-        from datetime import timedelta
-        import json
-        
         all_records = []
         current_date = start_date
         chunk_size_days = 10
@@ -272,7 +270,6 @@ class FaenApiClient:
             current_date = chunk_end_date
             
             # Small delay to avoid overwhelming the API
-            import time
             time.sleep(0.1)
         
         total_records = len(all_records)
@@ -328,8 +325,6 @@ class FaenApiClient:
                 print_warning("⚠ Could not parse date range, proceeding with single request")
         
         # Original single request logic
-        import json
-        
         params = {
             'query': json.dumps(query),
             'limit': limit
@@ -382,9 +377,6 @@ class FaenApiClient:
         Returns:
             Combined list of generation data records from all chunks
         """
-        from datetime import timedelta
-        import json
-        
         all_records = []
         current_date = start_date
         chunk_size_days = 10
@@ -454,7 +446,6 @@ class FaenApiClient:
             current_date = chunk_end_date
             
             # Small delay to avoid overwhelming the API
-            import time
             time.sleep(0.1)
         
         total_records = len(all_records)
@@ -488,8 +479,6 @@ class FaenApiClient:
         # Check if this is a large date range query that needs chunking
         datetime_range = query.get('datetime_utc', {})
         if isinstance(datetime_range, dict) and '$gte' in datetime_range and '$lt' in datetime_range:
-            from datetime import datetime, timedelta
-            
             # Extract start and end dates from query
             start_date_str = datetime_range['$gte']['$date']
             end_date_str = datetime_range['$lt']['$date']
@@ -510,9 +499,6 @@ class FaenApiClient:
                 print_warning("⚠ Could not parse date range, proceeding with single request")
         
         # Original single request logic
-        import json
-        from urllib.parse import quote
-        
         params = {
             'query': json.dumps(query),
             'limit': limit
@@ -565,9 +551,6 @@ class FaenApiClient:
         Returns:
             Combined list of weather data records from all chunks
         """
-        from datetime import timedelta
-        import json
-        
         all_records = []
         current_date = start_date
         chunk_size_days = 10
@@ -637,7 +620,6 @@ class FaenApiClient:
             current_date = chunk_end_date
             
             # Small delay to avoid overwhelming the API
-            import time
             time.sleep(0.1)
         
         total_records = len(all_records)
@@ -677,6 +659,68 @@ class FaenApiClient:
         except requests.exceptions.RequestException as e:
             print_error(f"Failed to get user info: {e}")
             raise
+
+    def get_mrae_client(self):
+        """
+        Get MRAE client instance for querying charging infrastructure data
+        
+        Returns:
+            MRAEClient instance configured with this session
+        """
+        if not self.access_token:
+            if not self.authenticate():
+                raise Exception("Authentication required before making API calls")
+        
+        return MRAEClient(self.session, self.base_url)
+    
+    def query_mrae(self, 
+                   start_date: Optional[str] = None,
+                   end_date: Optional[str] = None,
+                   location: Optional[str] = None,
+                   limit: Optional[int] = None) -> List[Dict[str, Any]]:
+        """
+        Query MRAE charging infrastructure data using GET request
+        
+        Delegates to MRAEClient for implementation.
+        
+        Args:
+            start_date: Start date in YYYY-MM-DD format (optional)
+            end_date: End date in YYYY-MM-DD format (optional)
+            location: Location filter (e.g., "MRA-E") (optional)
+            limit: Maximum number of results to return (optional)
+            
+        Returns:
+            List of MRAE charging infrastructure records
+        """
+        mrae_client = self.get_mrae_client()
+        return mrae_client.query_mrae(start_date, end_date, location, limit)
+    
+    def get_mrae_stats(self) -> Dict[str, Any]:
+        """
+        Get MRAE dataset statistics
+        
+        Delegates to MRAEClient for implementation.
+        
+        Returns:
+            Dictionary with MRAE statistics
+        """
+        mrae_client = self.get_mrae_client()
+        return mrae_client.get_mrae_stats()
+    
+    def get_mrae_monthly_summary(self, year: int) -> List[Dict[str, Any]]:
+        """
+        Get MRAE monthly summary for a specific year
+        
+        Delegates to MRAEClient for implementation.
+        
+        Args:
+            year: Year to retrieve data for
+            
+        Returns:
+            List of MRAE records for all months in the year
+        """
+        mrae_client = self.get_mrae_client()
+        return mrae_client.get_mrae_monthly_summary(year)
 
 
 def create_full_day_query(start_date: Union[date, datetime], end_date: Union[date, datetime]) -> Dict[str, Any]:

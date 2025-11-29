@@ -1,0 +1,654 @@
+@prefix datacellar: <http://datacellar.org/schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+datacellar:DatasetShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "A collection of data, particularly focused on PV power production metrics and environmental data.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:description;
+  ], [
+    sh:class datacellar:DatasetDescription;
+    sh:maxCount 1;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:datasetSelfDescription;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:name;
+  ], [
+    sh:datatype xsd:dateTime;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:createdAt;
+  ], [
+    sh:path datacellar:datasetMetadata;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:or (
+      [ sh:class datacellar:GeoLocalizedDataset ]
+      [ sh:class datacellar:Installation ]
+    );
+  ], [
+    sh:class datacellar:TimeSeries;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:timeSeries;
+  ];
+  sh:targetClass datacellar:Dataset.
+
+datacellar:BuildingDatasetShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "A dataset that includes detailed information about a building's characteristics, energy consumption, materials, and more.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:class datacellar:OccupantsMetadata;
+    sh:maxCount 1;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:occupantsMetadata;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:insulationThicknessUnit;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:buildingID;
+  ], [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:numberOfFloors;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:floorArea;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:coolingSource;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:heatingSource;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:insulationSurface;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:totalAnnualEnergyConsumption;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:insulationThickness;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:buildingStatus;
+  ], [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:buildingAge;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:openingsSurfaceUnit;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:glazingType;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:totalAnnualEnergyConsumptionUnit;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:openingsArea;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:insulationSurfaceUnit;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:address;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:insulationMaterial;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:frameMaterial;
+  ];
+  sh:targetClass datacellar:BuildingDataset.
+
+datacellar:DataPointShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Represents an individual measurement or observation within a time series, identified by its field type, timestamp, and the measured value.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:dateTime;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:timestamp;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:value;
+  ];
+  sh:targetClass datacellar:DataPoint.
+
+datacellar:DatasetDescriptionShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Provides a structured description of a dataset, including metadata and identification.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:datasetDescriptionID;
+  ], [
+    sh:class datacellar:DatasetField;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:datasetFields;
+  ], [
+    sh:datatype xsd:string;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:datasetMetadataTypes;
+  ];
+  sh:targetClass datacellar:DatasetDescription.
+
+datacellar:DatasetFieldShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "A list of DatasetField objects associated with the dataset description, detailing the fields covered by the dataset.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:description;
+  ], [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:datasetFieldID;
+  ], [
+    sh:class datacellar:FieldType;
+    sh:maxCount 1;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:fieldType;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:name;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:timeseriesMetadataType;
+  ];
+  sh:targetClass datacellar:DatasetField.
+
+datacellar:DatasetMetadataShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "This property holds a list of resources, each being a specific type of metadata object related to the dataset. The types include, but are not limited to, GeoLocalizedDataset, Installation, BuildingDataset, or LECDataset.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:class datacellar:GeoLocalizedDataset;
+    sh:maxCount 1;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:geoLocalizedDataset;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:datasetMetadataType;
+  ];
+  sh:targetClass datacellar:DatasetMetadata.
+
+datacellar:FieldTypeShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Defines the type of a dataset field, including its unit and whether it is suitable for averaging, summing, or anonymizing.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:boolean;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:summable;
+  ], [
+    sh:datatype xsd:boolean;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:anonymizable;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:unit;
+  ], [
+    sh:datatype xsd:boolean;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:averagable;
+  ], [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:fieldTypeID;
+  ];
+  sh:targetClass datacellar:FieldType.
+
+datacellar:GeoLocalizedDatasetShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "A dataset that includes geographical location information such as latitude, longitude, elevation, and postal code.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:class datacellar:LECDataset;
+    sh:maxCount 1;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:lecDataset;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:postalCode;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:elevation;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:latitude;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:longitude;
+  ], [
+    sh:class datacellar:Installation;
+    sh:maxCount 1;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:installation;
+  ], [
+    sh:class datacellar:BuildingDataset;
+    sh:maxCount 1;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:buildingDataset;
+  ];
+  sh:targetClass datacellar:GeoLocalizedDataset.
+
+datacellar:InstallationShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Information about a specific installation, including type, capacity, and the unit of capacity.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:capacityUnit;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:capacity;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:installationType;
+  ];
+  sh:targetClass datacellar:Installation.
+
+datacellar:LECDatasetShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "A dataset that includes information about the Life Cycle Assessment (LCA) of a building, including embodied energy, embodied carbon, and more.Represents a dataset specific to Local Energy Communities (LEC), including general information such as the name of the LEC and the number of buildings within it.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:name;
+  ], [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:numberOfBuildings;
+  ];
+  sh:targetClass datacellar:LECDataset.
+
+datacellar:OccupantsMetadataShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Metadata about the occupants of a building, including number, age groups, salary range, and average time spent at home.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:salaryRange;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:avgTimeAtHome;
+  ], [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:ageGroups;
+  ], [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:numberOfOccupants;
+  ];
+  sh:targetClass datacellar:OccupantsMetadata.
+
+datacellar:TimeSeriesShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "A series of data points collected over time, associated with a specific dataset and field, including details about the timing and granularity of data collection.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:datatype xsd:string;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:timeZone;
+  ], [
+    sh:maxCount 1;
+    sh:minCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:timeSeriesId;
+  ], [
+    sh:datatype xsd:dateTime;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:startDate;
+  ], [
+    sh:datatype xsd:float;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:granularity;
+  ], [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:datasetFieldID;
+  ], [
+    sh:class datacellar:DataPoint;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:path datacellar:dataPoints;
+  ], [
+    sh:datatype xsd:integer;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:dataPointsCount;
+  ], [
+    sh:datatype xsd:dateTime;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:path datacellar:endDate;
+  ], [
+    sh:path datacellar:latitude;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ], [
+    sh:path datacellar:longitude;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ], [
+    sh:path datacellar:timeSeriesMetadata;
+    sh:nodeKind sh:BlankNodeOrIRI;
+    sh:or (
+      [ sh:class datacellar:EnergyMeter ]
+      [ sh:class datacellar:PVPanel ]
+      [ sh:class datacellar:Sensor ]
+      [ sh:class datacellar:EnergyStorage ]
+      [ sh:class datacellar:WindTurbine ]
+      [ sh:class datacellar:EVChargingStation ]
+    );
+  ];
+  sh:targetClass datacellar:TimeSeries.
+
+datacellar:EnergyMeterShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Details of an energy meter device, including its ID, load type, maximum power, and whether it is programmable.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:path datacellar:deviceID;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:loadType;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:programmable;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:boolean;
+  ], [
+    sh:path datacellar:maxPower;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:integer;
+  ];
+  sh:targetClass datacellar:EnergyMeter.
+
+datacellar:PVPanelShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:path datacellar:tilt;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ], [
+    sh:path datacellar:tiltUnit;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:orientation;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ], [
+    sh:path datacellar:orientationUnit;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:capacity;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ], [
+    sh:path datacellar:capacityUnit;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:technology;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ];
+  sh:targetClass datacellar:PVPanel.
+
+datacellar:SensorShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Details of a sensor device, including its ID, load type, maximum power, and whether it is programmable.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:path datacellar:deviceID;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:loadType;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:programmable;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:boolean;
+  ];
+  sh:targetClass datacellar:Sensor.
+
+datacellar:EVChargingStationShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Information about an electric vehicle charging station, including provider, location, and capacity.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:path datacellar:serviceProvider;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:networkOperator;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:maxPower;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:integer;
+  ], [
+    sh:path datacellar:address;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ];
+  sh:targetClass datacellar:EVChargingStation.
+
+datacellar:EnergyStorageShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Information on an energy storage unit, including type, capacity, and depth of discharge.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:path datacellar:energyStorageType;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:capacity;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ], [
+    sh:path datacellar:capacityUnit;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:maximumPercDoD;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ];
+  sh:targetClass datacellar:EnergyStorage.
+
+datacellar:DHWShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Information about a Domestic Hot Water system, including tank specifications, heat source, and solar thermal integration.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:path datacellar:tankCapacity;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ], [
+    sh:path datacellar:tankCapacityUnit;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:solarThermalAvailability;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:boolean;
+  ], [
+    sh:path datacellar:heatSource;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ];
+  sh:targetClass datacellar:DHW.
+
+datacellar:EnergyMarketShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Information about an energy market, including the country and additional context or comments.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:path datacellar:country;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:comment;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ];
+  sh:targetClass datacellar:EnergyMarket.
+
+datacellar:WindTurbineShape a sh:NodeShape;
+  sh:closed true;
+  sh:description "Information about a Wind Turbine, including type, altitude and altitude unit.";
+  sh:ignoredProperties ( rdf:type );
+  sh:property [
+    sh:path datacellar:windTurbineType;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ], [
+    sh:path datacellar:altitude;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:float;
+  ], [
+    sh:path datacellar:altitudeUnit;
+    sh:maxCount 1;
+    sh:nodeKind sh:Literal;
+    sh:datatype xsd:string;
+  ];
+  sh:targetClass datacellar:WindTurbine.
+

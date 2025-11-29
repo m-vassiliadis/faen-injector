@@ -1,0 +1,95 @@
+{
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "graph": "@graph",
+    "datacellar": "http://datacellar.org/schema#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "datacellar:installedCapacity": {
+      "@type": "xsd:float"
+    },
+    "datacellar:elevation": {
+      "@type": "xsd:float"
+    },
+    "datacellar:floorArea": {
+      "@type": "xsd:float"
+    },
+    "datacellar:insulationSurface": {
+      "@type": "xsd:float"
+    },
+    "datacellar:openingsArea": {
+      "@type": "xsd:float"
+    },
+    "datacellar:orientation": {
+      "@type": "xsd:float"
+    },
+    "datacellar:startDate": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:endDate": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:tilt": {
+      "@type": "xsd:float"
+    },
+    "datacellar:timestamp": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:totalAnnualEnergyConsumption": {
+      "@type": "xsd:float"
+    },
+    "datacellar:value": {
+      "@type": "xsd:float"
+    },
+    "datacellar:granularity": {
+      "@type": "xsd:float"
+    }
+  },
+  "@type": "datacellar:Dataset",
+  "datacellar:name": "MRAE Charging Infrastructure 2014-2025 (mrae)",
+  "datacellar:description": "Monthly aggregated electric vehicle charging infrastructure data from MRA-E covering the period from 2014-07-01 to 2025-04-01",
+  "datacellar:datasetSelfDescription": {
+    "@type": "datacellar:DatasetDescription",
+    "datacellar:datasetDescriptionID": 1,
+    "datacellar:datasetMetadataTypes": [
+      "datacellar:Installation"
+    ],
+    "datacellar:datasetFields": [
+      {
+        "@type": "datacellar:DatasetField",
+        "datacellar:datasetFieldID": 1,
+        "datacellar:name": "consumedEnergy",
+        "datacellar:description": "Total energy consumed by electric vehicle charging in kWh",
+        "datacellar:timeseriesMetadataType": "datacellar:EVChargingStation",
+        "datacellar:fieldType": {
+          "@type": "datacellar:FieldType",
+          "datacellar:unit": "kWh",
+          "datacellar:averagable": false,
+          "datacellar:summable": true,
+          "datacellar:anonymizable": false
+        }
+      }
+    ]
+  },
+  "datacellar:timeSeries": [
+    {
+      "@type": "datacellar:TimeSeries",
+      "@id": "http://datacellar.org/timeseries/ac85fbf6-eeb3-41bb-8448-cfbf2dd492e5",
+      "datacellar:timeSeriesId": "ac85fbf6-eeb3-41bb-8448-cfbf2dd492e5",
+      "datacellar:datasetFieldID": 1,
+      "datacellar:startDate": "2014-07-01T00:00:00Z",
+      "datacellar:endDate": "2025-04-01T23:59:59Z",
+      "datacellar:timeZone": "0",
+      "datacellar:granularity": 2592000.0,
+      "datacellar:dataPoints": [],
+      "datacellar:timeSeriesMetadata": {
+        "@type": "datacellar:EVChargingStation",
+        "datacellar:serviceProvider": "MRA-E",
+        "datacellar:networkOperator": "Metropolitan Region Amsterdam Electric",
+        "datacellar:address": "Amsterdam Metropolitan Region, Netherlands"
+      }
+    }
+  ]
+}

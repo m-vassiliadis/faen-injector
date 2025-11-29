@@ -1,0 +1,1018 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "datacellar": "http://datacellar.org/schema#"
+  },
+  "@graph": [
+    {
+      "@id": "datacellar:Dataset",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "A collection of data, particularly focused on PV power production metrics and environmental data.",
+      "rdfs:label": "Dataset"
+    },
+    {
+      "@id": "datacellar:name",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The name of the dataset.",
+      "rdfs:label": "Name",
+      "rdfs:domain": "datacellar:Dataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:description",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A description of what the dataset contains.",
+      "rdfs:label": "Description",
+      "rdfs:domain": "datacellar:Dataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:datasetSelfDescription",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A self-description of the dataset, consisting of a list of DatasetDescription objects.",
+      "rdfs:label": "Dataset Self-Description",
+      "rdfs:domain": "datacellar:Dataset",
+      "rdfs:range": {
+        "@id": "datacellar:DatasetDescription",
+        "@container": "@set"
+      }
+    },
+    {
+      "@id": "datacellar:timeSeriesList",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A list of TimeSeries objects associated with the dataset, each representing a sequence of data points collected over time.",
+      "rdfs:label": "Time Series List",
+      "rdfs:domain": "datacellar:Dataset",
+      "rdfs:range": {
+        "@id": "datacellar:TimeSeries",
+        "@container": "@set"
+      }
+    },
+    {
+      "@id": "datacellar:datasetMetadataList",
+      "@type": "rdf:Property",
+      "rdfs:comment": "This property holds a list of resources, each being a specific type of metadata object related to the dataset. The types include, but are not limited to, GeoLocalizedDataset, Installation, BuildingDataset, or LECDataset.",
+      "rdfs:label": "Specific Metadata",
+      "rdfs:domain": "datacellar:Dataset",
+      "rdfs:range": {
+        "@id": "rdfs:Resource",
+        "@container": "@list"
+      }
+    },
+    {
+      "@id": "datacellar:GeoLocalizedDataset",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "A dataset that includes geographical location information such as latitude, longitude, elevation, and postal code.",
+      "rdfs:label": "GeoLocalizedDataset"
+    },
+    {
+      "@id": "datacellar:latitude",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The latitude of the geographical location.",
+      "rdfs:label": "Latitude",
+      "rdfs:domain": "datacellar:GeoLocalizedDataset",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:longitude",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The longitude of the geographical location of the whole dataset.",
+      "rdfs:label": "Longitude",
+      "rdfs:domain": "datacellar:GeoLocalizedDataset",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:elevation",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The elevation of the geographical location above sea level.",
+      "rdfs:label": "Elevation",
+      "rdfs:domain": "datacellar:GeoLocalizedDataset",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:postalCode",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The postal code of the geographical location.",
+      "rdfs:label": "Postal Code",
+      "rdfs:domain": "datacellar:GeoLocalizedDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:BuildingDataset",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "A dataset that includes detailed information about a building's characteristics, energy consumption, materials, and more.",
+      "rdfs:label": "BuildingDataset"
+    },
+    {
+      "@id": "datacellar:address",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The physical address of the building.",
+      "rdfs:label": "Address",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:buildingID",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A unique identifier for the building.",
+      "rdfs:label": "BuildingID",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:floorArea",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The total floor area of the building in square meters.",
+      "rdfs:label": "Floor Area",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:numberOfFloors",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The total number of floors in the building.",
+      "rdfs:label": "Number of Floors",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:totalAnnualEnergyConsumption",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The total annual energy consumption of the building.",
+      "rdfs:label": "Total Annual Energy Consumption",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:totalAnnualEnergyConsumptionUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the building's total annual energy consumption (e.g., kWh, MWh).",
+      "rdfs:label": "Total Annual Energy Consumption Unit",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:buildingStatus",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The current status of the building (e.g., occupied, under construction, vacant).",
+      "rdfs:label": "Building Status",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:buildingAge",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The age of the building in years.",
+      "rdfs:label": "Building Age",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:insulationMaterial",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The type of insulation material used in the building.",
+      "rdfs:label": "Insulation Material",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:insulationSurface",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The total surface area of the insulation used in the building.",
+      "rdfs:label": "Insulation Surface",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:insulationSurfaceUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the insulation surface (e.g., square meters).",
+      "rdfs:label": "Insulation Surface Unit",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:insulationThickness",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The thickness of the insulation used in the building.",
+      "rdfs:label": "Insulation Thickness",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:insulationThicknessUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the insulation thickness (e.g., centimeters).",
+      "rdfs:label": "Insulation Thickness Unit",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:openingsArea",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The total area of openings (windows, doors) in the building.",
+      "rdfs:label": "Openings Area",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:openingsSurfaceUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the area of openings.",
+      "rdfs:label": "Openings Surface Unit",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:glazingType",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The type of glazing used for windows in the building.",
+      "rdfs:label": "Glazing Type",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:frameMaterial",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The material used for window and door frames in the building.",
+      "rdfs:label": "Frame Material",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:heatingSource",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The primary source of heating for the building.",
+      "rdfs:label": "Heating Source",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:coolingSource",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The primary source of cooling for the building.",
+      "rdfs:label": "Cooling Source",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:occupantsList",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A list of OccupantsMetadata objects associated with the building, detailing information about different groups of occupants.",
+      "rdfs:label": "Occupants List",
+      "rdfs:domain": "datacellar:BuildingDataset",
+      "rdfs:range": {
+        "@id": "datacellar:OccupantsMetadata",
+        "@container": "@set"
+      }
+    },
+    {
+      "@id": "datacellar:OccupantsMetadata",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Metadata about the occupants of a building, including number, age groups, salary range, and average time spent at home.",
+      "rdfs:label": "OccupantsMetadata"
+    },
+    {
+      "@id": "datacellar:numberOfOccupants",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The total number of occupants within the building.",
+      "rdfs:label": "Number of Occupants",
+      "rdfs:domain": "datacellar:OccupantsMetadata",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:ageGroups",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Categorization of occupants based on age groups.",
+      "rdfs:label": "Age Groups",
+      "rdfs:domain": "datacellar:OccupantsMetadata",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:salaryRange",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The salary range of the occupants, typically expressed as a bracket or average.",
+      "rdfs:label": "Salary Range",
+      "rdfs:domain": "datacellar:OccupantsMetadata",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:avgTimeAtHome",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Average time spent at home by the occupants, which could be expressed in hours per day or similar units.",
+      "rdfs:label": "Average Time at Home",
+      "rdfs:domain": "datacellar:OccupantsMetadata",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:Installation",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information about a specific installation, including type, capacity, and the unit of capacity.",
+      "rdfs:label": "Installation"
+    },
+    {
+      "@id": "datacellar:installationType",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The type of installation (e.g., solar panels, wind turbine).",
+      "rdfs:label": "Installation Type",
+      "rdfs:domain": "datacellar:Installation",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:installedCapacity",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The installed capacity of the system, typically measured in kW or MW.",
+      "rdfs:label": "Installed Capacity",
+      "rdfs:domain": "datacellar:Installation",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:installedCapacityUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the installed capacity (e.g., kW, MW).",
+      "rdfs:label": "Installed Capacity Unit",
+      "rdfs:domain": "datacellar:Installation",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:installationManufacturer",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Manufacturer of the installation.",
+      "rdfs:label": "Installation Manufacturer",
+      "rdfs:domain": "datacellar:Installation",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:LECDataset",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Represents a dataset specific to Local Energy Communities (LEC), including general information such as the name of the LEC and the number of buildings within it.",
+      "rdfs:label": "LECDataset"
+    },
+    {
+      "@id": "datacellar:lecName",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The name of the Local Energy Community (LEC) or dataset.",
+      "rdfs:label": "Name",
+      "rdfs:domain": "datacellar:LECDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:numberOfBuilding",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The total number of buildings within the Local Energy Community (LEC).",
+      "rdfs:label": "Number of Building",
+      "rdfs:domain": "datacellar:LECDataset",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:TimeSeries",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "A series of data points collected over time, associated with a specific dataset and field, including details about the timing and granularity of data collection.",
+      "rdfs:label": "TimeSeries"
+    },
+    {
+      "@id": "datacellar:datasetFieldID",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Identifies the specific dataset field associated with this time series.",
+      "rdfs:label": "Dataset Field ID",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:startDate",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The starting point in time for the time series, represented in UTC.",
+      "rdfs:label": "UTC Timestamp Start",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": "xsd:dateTime"
+    },
+    {
+      "@id": "datacellar:endDate",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The ending point in time for the time series, represented in UTC.",
+      "rdfs:label": "UTC Timestamp End",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": "xsd:dateTime"
+    },
+    {
+      "@id": "datacellar:timeZone",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The time zone offset from UTC for the time series data, typically represented as an integer (e.g., '-5' for UTC-5).",
+      "rdfs:label": "Time Zone",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:latitude",
+      "@type": "rdf:Property",
+      "rdfs:comment": "latitude of the time series.",
+      "rdfs:label": "Latitude",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:longitude",
+      "@type": "rdf:Property",
+      "rdfs:comment": "longitude of the time series.",
+      "rdfs:label": "Longitude",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:granularity",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Describes the granularity of the time series data collection (e.g., hourly, daily).",
+      "rdfs:label": "Granularity",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:timeseriesDataPoints",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A list of DataPoint objects associated with the time series, each representing an individual measurement or observation.",
+      "rdfs:label": "Timeseries Data Point List",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": {
+        "@id": "datacellar:DataPoint",
+        "@container": "@list"
+      }
+    },
+    {
+      "@id": "datacellar:timeSeriesMetadata",
+      "@type": "rdf:Property",
+      "rdfs:comment": "This property holds a list of resources, each being a specific type of metadata object related to the Time series . The types include, but are not limited to, PVPanel, Energymeter, WindTurbine,EnergyStorage or EVChargingStation",
+      "rdfs:label": "Specific Metadata",
+      "rdfs:domain": "datacellar:TimeSeries",
+      "rdfs:range": "rdfs:Resource"
+    },
+    {
+      "@id": "datacellar:DataPoint",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Represents an individual measurement or observation within a time series, identified by its field type, timestamp, and the measured value.",
+      "rdfs:label": "DataPoint"
+    },
+    {
+      "@id": "datacellar:timeStamp",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The exact time at which this data point was recorded, represented in Coordinated Universal Time (UTC).",
+      "rdfs:label": "UTC Timestamp",
+      "rdfs:domain": "datacellar:DataPoint",
+      "rdfs:range": "xsd:dateTime"
+    },
+    {
+      "@id": "datacellar:value",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The value of the observation or measurement for this data point.",
+      "rdfs:label": "Value",
+      "rdfs:domain": "datacellar:DataPoint",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:EVChargingStation",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information about an electric vehicle charging station, including provider, location, and capacity.",
+      "rdfs:label": "EVChargingStation"
+    },
+    {
+      "@id": "datacellar:serviceProvider",
+      "@type": "rdf:Property",
+      "rdfs:label": "Service Provider",
+      "rdfs:comment": "The entity providing the EV charging service.",
+      "rdfs:domain": "datacellar:EVChargingStation",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:networkOperator",
+      "@type": "rdf:Property",
+      "rdfs:label": "Network Operator",
+      "rdfs:comment": "The operator of the EV charging network.",
+      "rdfs:domain": "datacellar:EVChargingStation",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:maxPower",
+      "@type": "rdf:Property",
+      "rdfs:label": "Max Power",
+      "rdfs:comment": "The maximum power output of the EV charging station (in kW).",
+      "rdfs:domain": [
+        "datacellar:EVChargingStation",
+        "datacellar:EnergyMeter"
+      ],
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:address",
+      "@type": "rdf:Property",
+      "rdfs:label": "Address",
+      "rdfs:comment": "Physical address of the EV charging station.",
+      "rdfs:domain": "datacellar:EVChargingStation",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:EnergyMeter",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Details of an energy meter device, including its ID, load type, maximum power, and whether it is programmable.",
+      "rdfs:label": "EnergyMeter"
+    },
+    {
+      "@id": "datacellar:deviceID",
+      "@type": "rdf:Property",
+      "rdfs:label": "Device ID",
+      "rdfs:comment": "Unique identifier for the energy meter device.",
+      "rdfs:domain": "datacellar:EnergyMeter",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:loadType",
+      "@type": "rdf:Property",
+      "rdfs:label": "Load Type",
+      "rdfs:comment": "Type of load measured by the energy meter.",
+      "rdfs:domain": "datacellar:EnergyMeter",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:programmable",
+      "@type": "rdf:Property",
+      "rdfs:label": "Programmable",
+      "rdfs:comment": "Indicates whether the energy meter is programmable.",
+      "rdfs:domain": "datacellar:EnergyMeter",
+      "rdfs:range": "xsd:boolean"
+    },
+    {
+      "@id": "datacellar:Sensor",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Generic sensor that produces a time series",
+      "rdfs:label": "Sensor"
+    },
+    {
+      "@id": "datacellar:sensorID",
+      "@type": "rdf:Property",
+      "rdfs:label": "Sensor ID",
+      "rdfs:comment": "Unique identifier for the sensor",
+      "rdfs:domain": "datacellar:Sensor",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:location",
+      "@type": "rdf:Property",
+      "rdfs:label": "Location",
+      "rdfs:comment": "Location of the sensor (indoor, outdoor, Kitchen etc",
+      "rdfs:domain": "datacellar:Sensor",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:EnergyStorage",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information on an energy storage unit, including type, capacity, and depth of discharge.",
+      "rdfs:label": "EnergyStorage"
+    },
+    {
+      "@id": "datacellar:energyStorageType",
+      "@type": "rdf:Property",
+      "rdfs:label": "Energy Storage Type",
+      "rdfs:comment": "The type of energy storage (e.g., battery, thermal storage).",
+      "rdfs:domain": "datacellar:EnergyStorage",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:capacity",
+      "@type": "rdf:Property",
+      "rdfs:label": "Capacity",
+      "rdfs:comment": "The energy capacity of the storage unit.",
+      "rdfs:domain": "datacellar:EnergyStorage",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:capacityUnit",
+      "@type": "rdf:Property",
+      "rdfs:label": "Capacity Unit",
+      "rdfs:comment": "Unit of measurement for the energy capacity (e.g., kWh, MWh).",
+      "rdfs:domain": "datacellar:EnergyStorage",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:maximumPercDoD",
+      "@type": "rdf:Property",
+      "rdfs:label": "Maximum Percentage Depth of Discharge",
+      "rdfs:comment": "The maximum recommended depth of discharge for the storage unit, expressed as a percentage.",
+      "rdfs:domain": "datacellar:EnergyStorage",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:DatasetDescription",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Provides a structured description of a dataset, including metadata and identification.",
+      "rdfs:label": "DatasetDescription"
+    },
+    {
+      "@id": "datacellar:datasetDescriptionID",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A unique identifier for the dataset description.",
+      "rdfs:label": "DatasetDescription ID",
+      "rdfs:domain": "datacellar:DatasetDescription",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:datasetMetadataTypes",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The type of metadata associated with the dataset.",
+      "rdfs:label": "Dataset Metadata Type",
+      "rdfs:domain": "datacellar:DatasetDescription",
+      "rdfs:range": "xsd:string",
+      "@container": "@list"
+    },
+    {
+      "@id": "datacellar:datasetFields",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A list of DatasetField objects associated with the dataset description, detailing the fields covered by the dataset.",
+      "rdfs:label": "Dataset Fields",
+      "rdfs:domain": "datacellar:DatasetDescription",
+      "rdfs:range": "datacellar:DatasetField",
+      "@container": "@set"
+    },
+    {
+      "@id": "datacellar:DatasetField",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Represents a specific field within a dataset, potentially linked to time series metadata.",
+      "rdfs:label": "DatasetField"
+    },
+    {
+      "@id": "datacellar:datasetFieldID",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A unique identifier for the dataset field.",
+      "rdfs:label": "DatasetField ID",
+      "rdfs:domain": "datacellar:DatasetField",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:timeseriesMetadataType",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Identifies the type of time series metadata associated with this dataset field.",
+      "rdfs:label": "Timeseries Metadata Type",
+      "rdfs:domain": "datacellar:DatasetField",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:fieldName",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The name of the dataset field.",
+      "rdfs:label": "Name",
+      "rdfs:domain": "datacellar:DatasetField",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:fieldDescription",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A description of the dataset field.",
+      "rdfs:label": "Description",
+      "rdfs:domain": "datacellar:DatasetField",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:type",
+      "@type": "datacellar:FieldType",
+      "rdfs:comment": "Fieldtype object describing the field",
+      "rdfs:label": "object",
+      "rdfs:domain": "datacellar:DatasetField",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:FieldType",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Defines the type of a dataset field, including its unit and whether it is suitable for averaging, summing, or anonymizing.",
+      "rdfs:label": "FieldType"
+    },
+    {
+      "@id": "datacellar:fieldTypeID",
+      "@type": "rdf:Property",
+      "rdfs:comment": "A unique identifier for the field type.",
+      "rdfs:label": "FieldType ID",
+      "rdfs:domain": "datacellar:FieldType",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:unit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the dataset field.",
+      "rdfs:label": "Unit",
+      "rdfs:domain": "datacellar:FieldType",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:averagable",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Indicates whether the dataset field can be averaged.",
+      "rdfs:label": "Averagable",
+      "rdfs:domain": "datacellar:FieldType",
+      "rdfs:range": "xsd:boolean"
+    },
+    {
+      "@id": "datacellar:summable",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Indicates whether the dataset field can be summed.",
+      "rdfs:label": "Summable",
+      "rdfs:domain": "datacellar:FieldType",
+      "rdfs:range": "xsd:boolean"
+    },
+    {
+      "@id": "datacellar:anonymizable",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Indicates whether the dataset field can be anonymized.",
+      "rdfs:label": "Anonymizable",
+      "rdfs:domain": "datacellar:FieldType",
+      "rdfs:range": "xsd:boolean"
+    },
+    {
+      "@id": "datacellar:PVPanel",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information about a photovoltaic panel installation, including geographic location, orientation, capacity, and technology specifications.",
+      "rdfs:label": "PVPanel"
+    },
+    {
+      "@id": "datacellar:fieldId",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Field identifier linking the PV panel to its corresponding dataset field.",
+      "rdfs:label": "Field ID",
+      "rdfs:domain": "datacellar:PVPanel",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "datacellar:tilt",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The tilt angle of the PV panel from horizontal.",
+      "rdfs:label": "Tilt",
+      "rdfs:domain": "datacellar:PVPanel",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:tiltUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the tilt angle (e.g., degrees, radians).",
+      "rdfs:label": "Tilt Unit",
+      "rdfs:domain": "datacellar:PVPanel",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:orientation",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The azimuth orientation angle of the PV panel (typically 0° = North, 90° = East, 180° = South, 270° = West).",
+      "rdfs:label": "Orientation",
+      "rdfs:domain": "datacellar:PVPanel",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:orientationUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the orientation angle (e.g., degrees, radians).",
+      "rdfs:label": "Orientation Unit",
+      "rdfs:domain": "datacellar:PVPanel",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:technology",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The type of photovoltaic technology used (e.g., monocrystalline, polycrystalline, thin-film, PERC).",
+      "rdfs:label": "Technology",
+      "rdfs:domain": "datacellar:PVPanel",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:DHW",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information about a Domestic Hot Water system, including tank specifications, heat source, and solar thermal integration.",
+      "rdfs:label": "DHW"
+    },
+    {
+      "@id": "datacellar:tankCapacity",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The storage capacity of the domestic hot water tank.",
+      "rdfs:label": "Tank Capacity",
+      "rdfs:domain": "datacellar:DHW",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:tankCapacityUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the tank capacity (e.g., liters, gallons).",
+      "rdfs:label": "Tank Capacity Unit",
+      "rdfs:domain": "datacellar:DHW",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:solarThermalAvailability",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Indicates whether solar thermal heating is available and integrated with the DHW system.",
+      "rdfs:label": "Solar Thermal Availability",
+      "rdfs:domain": "datacellar:DHW",
+      "rdfs:range": "xsd:boolean"
+    },
+    {
+      "@id": "datacellar:heatSource",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The primary heat source for the domestic hot water system (e.g., electric, gas, solar, heat pump, biomass).",
+      "rdfs:label": "Heat Source",
+      "rdfs:domain": "datacellar:DHW",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:EnergyMarket",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information about an energy market, including the country and additional context or comments.",
+      "rdfs:label": "EnergyMarket"
+    },
+    {
+      "@id": "datacellar:country",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The country where the energy market operates.",
+      "rdfs:label": "Country",
+      "rdfs:domain": "datacellar:EnergyMarket",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:comment",
+      "@type": "rdf:Property",
+      "rdfs:comment": "Additional comments or context about the energy market.",
+      "rdfs:label": "Comment",
+      "rdfs:domain": "datacellar:EnergyMarket",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:WindTurbine",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information about a Wind Turbine, including type, altitude and altitude unit.",
+      "rdfs:label": "WindTurbine"
+    },
+    {
+      "@id": "datacellar:windTurbineType",
+      "@type": "rdf:Property",
+      "rdfs:label": "Wind Turbine Type",
+      "rdfs:comment": "The type of wind turbine (e.g., HAWT (Horizontal Axis Wind Turbine), VAWT (Vertical Axis Wind Turbine)).",
+      "rdfs:domain": "datacellar:WindTurbine",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:altitude",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The altitude of the wind turbine's location.",
+      "rdfs:label": "Wind Turbine Location Altitude",
+      "rdfs:domain": "datacellar:WindTurbine",
+      "rdfs:range": "xsd:float"
+    },
+    {
+      "@id": "datacellar:altitudeUnit",
+      "@type": "rdf:Property",
+      "rdfs:comment": "The unit of measurement for the turbine location's altitude (e.g., m).",
+      "rdfs:label": "Altitude Unit",
+      "rdfs:domain": "datacellar:WindTurbine",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:WindStation",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information about a Wind Station, including geographic location (latitude, longitude) and maximum power capacity.",
+      "rdfs:label": "WindStation"
+    },
+    {
+      "@id": "datacellar:maxPower",
+      "@type": "rdf:Property",
+      "rdfs:label": "Maximum Power",
+      "rdfs:comment": "The maximum power capacity of the wind station.",
+      "rdfs:domain": "datacellar:WindStation",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:maxPowerUnit",
+      "@type": "rdf:Property",
+      "rdfs:label": "Maximum Power Unit",
+      "rdfs:comment": "The unit of measurement for the maximum power capacity (e.g., kW, MW).",
+      "rdfs:domain": "datacellar:WindStation",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:BatteryOptimizationDataset",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Dataset for battery energy storage system optimization, including battery specifications, state of charge parameters, and grid interaction fees.",
+      "rdfs:label": "BatteryOptimizationDataset"
+    },
+    {
+      "@id": "datacellar:batteryCapacity",
+      "@type": "rdf:Property",
+      "rdfs:label": "Battery Capacity",
+      "rdfs:comment": "The total energy storage capacity of the battery.",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:batteryCapacityUnit",
+      "@type": "rdf:Property",
+      "rdfs:label": "Battery Capacity Unit",
+      "rdfs:comment": "The unit of measurement for battery capacity (e.g., kWh, MWh).",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:batteryPower",
+      "@type": "rdf:Property",
+      "rdfs:label": "Battery Power",
+      "rdfs:comment": "The maximum charging/discharging power rating of the battery.",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:batteryPowerUnit",
+      "@type": "rdf:Property",
+      "rdfs:label": "Battery Power Unit",
+      "rdfs:comment": "The unit of measurement for battery power (e.g., kW, MW).",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "datacellar:batteryEfficiency",
+      "@type": "rdf:Property",
+      "rdfs:label": "Battery Efficiency",
+      "rdfs:comment": "The round-trip efficiency of the battery system (ratio between 0 and 1).",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:initialStateofCharge",
+      "@type": "rdf:Property",
+      "rdfs:label": "Initial State of Charge",
+      "rdfs:comment": "The initial state of charge of the battery at the start of the optimization period (ratio between 0 and 1).",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:finalStateofCharge",
+      "@type": "rdf:Property",
+      "rdfs:label": "Final State of Charge",
+      "rdfs:comment": "The desired final state of charge of the battery at the end of the optimization period (ratio between 0 and 1).",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:minStateofCharge",
+      "@type": "rdf:Property",
+      "rdfs:label": "Minimum State of Charge",
+      "rdfs:comment": "The minimum allowable state of charge for battery operation (ratio between 0 and 1).",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:maxStateofCharge",
+      "@type": "rdf:Property",
+      "rdfs:label": "Maximum State of Charge",
+      "rdfs:comment": "The maximum allowable state of charge for battery operation (ratio between 0 and 1).",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:exportPriceFactor",
+      "@type": "rdf:Property",
+      "rdfs:label": "Export Price Factor",
+      "rdfs:comment": "The factor applied to electricity prices when exporting energy to the grid (ratio between 0 and 1).",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:gridImportFee",
+      "@type": "rdf:Property",
+      "rdfs:label": "Grid Import Fee",
+      "rdfs:comment": "The fee charged per unit of energy imported from the grid.",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:gridExportFee",
+      "@type": "rdf:Property",
+      "rdfs:label": "Grid Export Fee",
+      "rdfs:comment": "The fee charged per unit of energy exported to the grid.",
+      "rdfs:domain": "datacellar:BatteryOptimizationDataset",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:PVStation",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Information about a Photovoltaic (PV) Station, including geographic location (latitude, longitude) and maximum power capacity.",
+      "rdfs:label": "PVStation"
+    },
+    {
+      "@id": "datacellar:maxPower",
+      "@type": "rdf:Property",
+      "rdfs:label": "Maximum Power",
+      "rdfs:comment": "The maximum power capacity of the station.",
+      "rdfs:domain": "datacellar:PVStation",
+      "rdfs:range": "xsd:decimal"
+    },
+    {
+      "@id": "datacellar:maxPowerUnit",
+      "@type": "rdf:Property",
+      "rdfs:label": "Maximum Power Unit",
+      "rdfs:comment": "The unit of measurement for the maximum power capacity (e.g., kW, MW).",
+      "rdfs:domain": "datacellar:PVStation",
+      "rdfs:range": "xsd:string"
+    }
+  ]
+}
