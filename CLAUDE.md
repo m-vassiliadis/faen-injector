@@ -21,6 +21,10 @@ This is the FAEN API client directory within the CDE (Data Cellar) server projec
 - **Data Transformation**: Converts FAEN records to CDE datapoint format for timeseries storage
   - Generation data: `generation_kwh` → `generatedEnergy` timeseries
   - Weather data: `ta` → `outdoorTemperature`, `hr` → `humidityLevel` timeseries
+- **EDG West Module (`edg.py`)**: Local CSV-based data integration for Bulgarian DSO
+  - Loads data from local CSV file (no remote API required)
+  - Aggregates data across all bus/connection points
+  - Combined dataset with `consumedEnergy` and `generatedEnergy` fields
 
 ### API Integration Flow
 
@@ -126,15 +130,20 @@ The CLI supports two operation modes:
 python main.py [OPTIONS]
 
 Options:
-  --dataset-type {1,2,3}    Dataset type to process:
-                             1 = Building Consumption
-                             2 = Photovoltaic Generation (+ Weather)
-                             3 = Both Types (separate datasets)
-  --start-date YYYY-MM-DD     Start date (inclusive)
-  --end-date YYYY-MM-DD       End date (exclusive)
-  --limit N                   Maximum number of records to retrieve
-  --non-interactive           Run without interactive prompts (auto-confirm)
-  -h, --help                  Show help message and exit
+  --dataset-type {1,2,3,4,5,6}  Dataset type to process:
+                                  1 = Building Consumption
+                                  2 = Photovoltaic Generation (+ Weather)
+                                  3 = Both Types (separate datasets)
+                                  4 = MRAE Charging Infrastructure
+                                  5 = All types
+                                  6 = EDG West Bankya (from local CSV)
+  --start-date YYYY-MM-DD       Start date (inclusive)
+  --end-date YYYY-MM-DD         End date (exclusive)
+  --limit N                     Maximum number of records to retrieve
+  --non-interactive             Run without interactive prompts (auto-confirm)
+  --location LOCATION           Location filter for MRAE data (default: MRA-E)
+  --edg-csv-path PATH           Path to EDG CSV file (default: edg-data/bankya.csv)
+  -h, --help                    Show help message and exit
 ```
 
 ### Dataset Types
@@ -142,6 +151,9 @@ Options:
 1. **Building Consumption**: Energy consumption data from buildings
 2. **Photovoltaic Generation**: Combined generation + weather data (generation, temperature, humidity)
 3. **Both Types**: Creates separate datasets for both consumption and generation data
+4. **MRAE Charging Infrastructure**: EV charging infrastructure data from Amsterdam region
+5. **All Types**: Creates separate datasets for all types (1-4)
+6. **EDG West Bankya**: Bulgarian DSO energy data from local CSV file (aggregated consumption + generation)
 
 ### Date Range Configuration  
 - **Default Range**: 2025-05-01 to 2025-06-01 (May 2025, 31 days) - Interactive mode only
@@ -216,8 +228,65 @@ python main.py --non-interactive --dataset-type 2 --start-date 2025-05-01 --end-
 # Non-interactive - both dataset types with large date range
 python main.py --non-interactive --dataset-type 3 --start-date 2025-01-01 --end-date 2025-12-31 --limit 1000
 
+# Non-interactive - MRAE charging infrastructure data
+python main.py --non-interactive --dataset-type 4 --start-date 2020-01-01 --end-date 2023-12-31
+
+# Non-interactive - EDG West Bankya data from local CSV
+python main.py --non-interactive --dataset-type 6 --start-date 2022-01-01 --end-date 2022-12-31
+
+# EDG West with custom CSV path
+python main.py --non-interactive --dataset-type 6 --start-date 2022-01-01 --end-date 2022-12-31 --edg-csv-path /path/to/custom.csv
+
 # View help
 python main.py --help
 ```
+
+## EDG West Data Integration
+
+### Overview
+
+EDG West is a Distribution System Operator (DSO) operating in Western Bulgaria. Unlike FAEN and MRAE which use remote APIs, EDG data is loaded from local CSV files included in the repository.
+
+### Data Source
+
+**File**: `edg-data/bankya.csv`
+
+**Columns**:
+- `BUS_name`: Identifier for the bus/connection point (e.g., `SF_0004`)
+- `timestamp`: Date and time of the measurement (ISO 8601 format)
+- `measurement`: The type of energy measurement (`consumedEnergy`, `generatedEnergy`)
+- `value`: The measured value
+- `unit`: The unit of measurement (typically `kWh`)
+
+### Data Characteristics
+
+- **Granularity**: Monthly aggregated data
+- **Time Range**: 2022-01-01 to 2022-12-31 (full year 2022)
+- **Buses**: 85 unique bus/connection points
+- **Measurements**: `consumedEnergy` and `generatedEnergy`
+- **Aggregation**: Values are summed across all buses into 2 total timeseries
+
+### Geographic Metadata
+
+- **Location**: Bankya, Bulgaria
+- **Coordinates**: 42.72°N, 23.17°E
+
+### Module Structure
+
+The EDG implementation (`edg.py`) follows the same pattern as MRAE:
+
+- **`EDGDataLoader`**: Loads and aggregates CSV data
+  - `load_csv()`: Parse CSV with date filtering
+  - `aggregate_by_timestamp()`: Sum values across all buses
+  - `get_aggregated_data()`: Combined load and aggregate
+
+- **`EDGDatasetGenerator`**: Creates JSON-LD dataset definitions
+  - 2 fields: `consumedEnergy` (fieldID=1), `generatedEnergy` (fieldID=2)
+  - Metadata type: `datacellar:EnergyMeter`
+  - Monthly granularity (2592000 seconds)
+
+- **`EDGDataTransformer`**: Transforms data to CDE datapoint format
+  - `transform_to_datapoints()`: Convert aggregated records
+  - `create_timeseries_mapping()`: Map field IDs to timeseries IDs
 
 

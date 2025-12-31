@@ -112,6 +112,73 @@ class CDEApiClient:
             print_error(f"✗ Dataset file not found: {dataset_file_path}")
             return None
     
+    def get_datasets(self) -> List[Dict[str, Any]]:
+        """
+        Get all datasets from CDE
+        
+        Returns:
+            List of dataset dictionaries or None if failed
+        """
+        datasets_url = urljoin(self.base_url + '/', 'api/dataset')
+        
+        try:
+            print_info("Fetching datasets from CDE...")
+            response = self.session.get(
+                datasets_url,
+                timeout=30,
+                headers={'Content-Type': 'application/json'}
+            )
+            
+            if response.status_code == 200:
+                datasets = response.json()
+                print_success(f"✓ Retrieved {len(datasets)} datasets")
+                return datasets
+            else:
+                print_error(f"✗ Failed to get datasets with status {response.status_code}")
+                print_data("Response content", response.text[:500], 1)
+                return None
+                
+        except requests.exceptions.RequestException as e:
+            print_error(f"✗ Failed to get datasets: {e}")
+            return None
+
+    def delete_dataset(self, dataset_id: str) -> bool:
+        """
+        Delete a dataset from CDE by its ID
+        
+        Args:
+            dataset_id: UUID of the dataset to delete
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        delete_url = urljoin(self.base_url + '/', f'api/dataset/{dataset_id}')
+        
+        try:
+            print_info(f"Deleting dataset: {dataset_id}")
+            print_data("Delete URL", delete_url, 1)
+            
+            response = self.session.delete(
+                delete_url,
+                timeout=30
+            )
+            
+            if response.status_code in [200, 204]:  # Accept 200 OK or 204 No Content
+                print_success("✓ Dataset deleted successfully")
+                return True
+            else:
+                print_error(f"✗ Dataset deletion failed with status {response.status_code}")
+                try:
+                    error_data = response.json()
+                    print_data("Response content", error_data, 1)
+                except:
+                    print_data("Response content", response.text, 1)
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            print_error(f"✗ Dataset deletion failed: {e}")
+            return False
+    
     def get_timeseries(self, dataset_id: str = None, dataset_name: str = None) -> List[Dict[str, Any]]:
         """
         Get timeseries from CDE, optionally filtered by dataset ID or name

@@ -1,15 +1,22 @@
 # FAEN API Client
 
-This directory contains the FAEN API client for retrieving consumption data and processing it for the CDE server.
+This directory contains the FAEN API client for retrieving energy data and processing it for the CDE server. The client supports multiple dataset types including building consumption, photovoltaic generation, weather data, and EV charging infrastructure.
 
-## Files
+## Supported Dataset Types
 
-- `main.py` - Main client for interacting with the FAEN API
-- `env.template` - Environment configuration template
-- `data/faen_api_spec.json` - OpenAPI specification for the FAEN API
-- `data/faen_consumption_july_2022.json` - Sample consumption data
-- `data/faen_consumption_july_2022_definition.json` - Sample dataset definition
-- `data/faen_consumption_july_2022.csv` - Sample consumption data in CSV format
+1. **Building Consumption** - Household energy consumption (hourly)
+2. **Photovoltaic Generation** - Solar generation + weather data (hourly)
+3. **MRAE Charging Infrastructure** - EV charging data (monthly aggregated)
+4. **Combined** - Process multiple types simultaneously
+
+## Key Files
+
+- `main.py` - Main CLI for FAEN API and CDE integration
+- `faen_client.py` - API client with authentication
+- `cde_client.py` - CDE middleware client
+- `data_utils.py` - Data transformation utilities
+- `mrae.py` - MRAE-specific functionality
+- `env.template` - Configuration template
 
 ## Setup
 
@@ -55,32 +62,17 @@ pip install -r requirements.txt
 
 ## Quarterly Data Extraction Script
 
-A new script `run_quarterly_data_extraction.sh` has been created to automatically process FAEN data for all quarters from 2022-01-01 to 2024-12-31. This script:
+The `run_quarterly_data_extraction.sh` script automatically processes FAEN data for all quarters from 2022-01-01 to 2024-12-31:
 
-- Processes data in quarterly chunks (12 quarters total)
-- Uses non-interactive mode to avoid prompts
-- Calls main.py with appropriate date ranges and dataset type
-- Automatically handles authentication and data retrieval
+```bash
+chmod +x run_quarterly_data_extraction.sh
+./run_quarterly_data_extraction.sh
+```
 
-### Usage
+The script processes data in quarterly chunks using non-interactive mode.
 
-1. Ensure your `.env` file is properly configured with FAEN and CDE credentials
-2. Make the script executable (if not already):
-   ```bash
-   chmod +x run_quarterly_data_extraction.sh
-   ```
-3. Run the script:
-   ```bash
-   ./run_quarterly_data_extraction.sh
-   ```
+### Alternative: Environment Variables
 
-The script will process each quarter sequentially and save dataset definitions and upload data to CDE for each quarter.
-
-3. Configure environment (steps 2-4 above)
-
-### Option 2: Using environment variables
-
-Set environment variables manually:
 ```bash
 export FAEN_API_URL="https://datacellarvcapi.test.ctic.es"
 export FAEN_USERNAME="datacellar.developer"
@@ -89,16 +81,69 @@ export FAEN_PASSWORD="your_actual_password"
 
 ## Usage
 
-The script will automatically:
-1. Load configuration from `.env` file (if present)
-2. Fall back to environment variables
-3. Authenticate with the FAEN API
-4. Query consumption data for the last 7 days
-5. Display the results
+### Interactive Mode (Recommended for First-Time Users)
+
+Run the script and follow the prompts:
 
 ```bash
 python main.py
 ```
+
+You'll be prompted to select:
+- Dataset type (1-5)
+- Date range
+- Record limit
+
+### Non-Interactive Mode
+
+For automation and scripting, use command-line arguments:
+
+```bash
+# Building consumption data
+python main.py --dataset-type 1 --start-date 2025-05-01 --end-date 2025-05-02 --non-interactive
+
+# Photovoltaic generation + weather
+python main.py --dataset-type 2 --start-date 2025-05-01 --end-date 2025-05-02 --non-interactive
+
+# MRAE charging infrastructure
+python main.py --dataset-type 4 --start-date 2020-01-01 --end-date 2023-12-31 --non-interactive
+
+# All dataset types
+python main.py --dataset-type 5 --start-date 2025-05-01 --end-date 2025-05-02 --non-interactive
+```
+
+### Dataset Type Options
+
+| Option | Description                   | Data Sources             | Granularity |
+| ------ | ----------------------------- | ------------------------ | ----------- |
+| 1      | Building Consumption          | Energy consumption       | Hourly      |
+| 2      | Photovoltaic Generation       | Solar + weather          | Hourly      |
+| 3      | Both Consumption & Generation | Energy + solar + weather | Hourly      |
+| 4      | MRAE Charging Infrastructure  | EV charging data         | Monthly     |
+| 5      | All Types                     | All available datasets   | Mixed       |
+
+### Command-Line Options
+
+```bash
+python main.py --help
+```
+
+Available options:
+- `--dataset-type {1,2,3,4,5}` - Select dataset type
+- `--start-date YYYY-MM-DD` - Start date (inclusive)
+- `--end-date YYYY-MM-DD` - End date (exclusive)
+- `--limit N` - Maximum records to retrieve
+- `--location LOCATION` - Location filter for MRAE data (default: MRA-E)
+- `--non-interactive` - Run without prompts (auto-confirm all)
+
+### Workflow
+
+The script automatically:
+1. Authenticates with FAEN API (OAuth2)
+2. Queries data for specified date range and type
+3. Generates JSON-LD dataset definitions
+4. Uploads datasets to CDE
+5. Transforms and uploads datapoints in batches
 
 ## Authentication
 
@@ -107,16 +152,34 @@ The client uses OAuth2 password flow as shown in the Swagger UI:
 - Credentials: username, password, grant_type=password
 - Returns: Bearer token for subsequent API calls
 
+## MRAE Charging Infrastructure
+
+The MRAE (Metropolitan Region Amsterdam Electric) dataset provides monthly aggregated EV charging data:
+
+- **Total Energy** (kWh) - Energy consumed
+- **Connection Time** (hours) - Connection duration
+- **Electric Kilometers** (km) - Distance driven
+- **CO2 Reduction** (tons) - Environmental impact
+- **Charging Sessions** (count) - Number of sessions
+- **Charging Poles** (count) - Active infrastructure
+
 ## API Endpoints
 
 ### Authentication
-- `POST /token` - Get access token
+- `POST /token` - Get access token (OAuth2 password flow)
 
 ### Data Retrieval
 - `POST /consumption/query` - Query consumption data with MongoDB-style queries
+- `GET /generation/` - Query generation data with filters
+- `GET /weather/` - Query weather data with filters
+- `GET /mrae/` - Query MRAE charging infrastructure data
+- `GET /mrae/stats` - Get MRAE dataset statistics
+- `GET /mrae/monthly-summary/{year}` - Get MRAE monthly summary
 - `GET /users/me/` - Get current user information
 
-## Example Query
+## Example Queries
+
+### Consumption Data (MongoDB-style)
 
 ```python
 query = {
@@ -125,4 +188,27 @@ query = {
         "$lte": {"$date": "2022-07-15T16:00:00+0200"}
     }
 }
+```
+
+### MRAE Data (GET parameters)
+
+```python
+faen_client.query_mrae(
+    start_date="2020-01-01",
+    end_date="2023-12-31",
+    location="MRA-E",
+    limit=100
+)
+```
+
+## Output Files
+
+Generated files are saved to the `datasets/` directory:
+
+```
+datasets/
+├── faen_consumption_dataset_definition_YYYY-MM-DD_to_YYYY-MM-DD.json
+├── faen_generation_dataset_definition_YYYY-MM-DD_to_YYYY-MM-DD.json
+├── faen_mrae_dataset_definition_YYYY-MM-DD_to_YYYY-MM-DD.json
+└── test_mrae_output.json (from test script)
 ```

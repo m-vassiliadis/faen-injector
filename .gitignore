@@ -23,8 +23,11 @@ __pycache__/
 Thumbs.db
 
 # Generated datasets (optional - comment out if you want to track them)
-datasets/
+datasets/*.json
+!datasets/mrae_dataset_example.json
 
 .env
 .env.bak
 AGENTS.md
+datasets/csv
+.claude
